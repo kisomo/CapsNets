@@ -30,25 +30,23 @@ def accuracy(predictions, labels):
 
 
 #load the MNIST and  CIFAR-10 datasets 
-#from tensorflow.examples.tutorials.mnist import input_data
-#mnist = input_data.read_data_sets("/tmp/data/", one_hot = True)
-#from keras.datasets import cifar10
-'''
-mnist_folder = './data/mnist/'
+import mnist
+from mnist import MNIST
+mndata = MNIST('/home/terrence/CODING/Python/MODELS/CapsNets/python-mnist/data')
+
 mnist_image_width = 28
 mnist_image_height = 28
 mnist_image_depth = 1
 mnist_num_labels = 10
  
-mndata = MNIST(mnist_folder)
 mnist_train_dataset_, mnist_train_labels_ = mndata.load_training()
 mnist_test_dataset_, mnist_test_labels_ = mndata.load_testing()
  
-mnist_train_dataset, mnist_train_labels = reformat_data(mnist_train_dataset_, mnist_train_labels_, mnist_image_size, mnist_image_size, mnist_image_depth)
-mnist_test_dataset, mnist_test_labels = reformat_data(mnist_test_dataset_, mnist_test_labels_, mnist_image_size, mnist_image_size, mnist_image_depth)
+mnist_train_dataset, mnist_train_labels = reformat_data(mnist_train_dataset_, mnist_train_labels_, mnist_image_width, mnist_image_height, mnist_image_depth)
+mnist_test_dataset, mnist_test_labels = reformat_data(mnist_test_dataset_, mnist_test_labels_, mnist_image_width, mnist_image_height, mnist_image_depth)
  
 print("There are {} images, each of size {}".format(len(mnist_train_dataset), len(mnist_train_dataset[0])))
-print("Meaning each image has the size of 28*28*1 = {}".format(mnist_image_size*mnist_image_size*1))
+print("Meaning each image has the size of 28*28*1 = {}".format(mnist_image_width*mnist_image_height*1))
 print("The training set contains the following {} labels: {}".format(len(np.unique(mnist_train_labels_)), np.unique(mnist_train_labels_)))
  
 print('Training set shape', mnist_train_dataset.shape, mnist_train_labels.shape)
@@ -56,10 +54,10 @@ print('Test set shape', mnist_test_dataset.shape, mnist_test_labels.shape)
  
 train_dataset_mnist, train_labels_mnist = mnist_train_dataset, mnist_train_labels
 test_dataset_mnist, test_labels_mnist = mnist_test_dataset, mnist_test_labels
- '''
+ 
 ######################################################################################
+print("+++ cifar10 ++++++++++")
 
-#cifar10_folder = './data/cifar10/'
 cifar10_folder = '/home/terrence/CODING/Python/MODELS/CapsNets/data/cifar10/'
 train_datasets = ['data_batch_1', 'data_batch_2', 'data_batch_3', 'data_batch_4', 'data_batch_5', ]
 test_dataset = ['test_batch']
@@ -68,12 +66,14 @@ c10_image_width = 32
 c10_image_depth = 3
 c10_num_labels = 10
  
+
 with open(cifar10_folder + test_dataset[0], 'rb') as f0:
     #c10_test_dict = p.load(f0, encoding='bytes')
     c10_test_dict = p.load(f0)
 c10_test_dataset, c10_test_labels = c10_test_dict[b'data'], c10_test_dict[b'labels']
 test_dataset_cifar10, test_labels_cifar10 = reformat_data(c10_test_dataset, c10_test_labels, c10_image_height, c10_image_width, c10_image_depth)
  
+
 c10_train_dataset, c10_train_labels = [], []
 for train_dataset in train_datasets:
     with open(cifar10_folder + train_dataset, 'rb') as f0:
@@ -93,13 +93,15 @@ print("The training set contains the following labels: {}".format(np.unique(c10_
 print('Training set shape', train_dataset_cifar10.shape, train_labels_cifar10.shape)
 print('Test set shape', test_dataset_cifar10.shape, test_labels_cifar10.shape)
 
+
 # fit a 1 layer FCNN
-'''
+
 image_width = mnist_image_width
 image_height = mnist_image_height
 image_depth = mnist_image_depth
 num_labels = mnist_num_labels 
- 
+batch_size = 11 # I just created this
+
 #the dataset
 train_dataset = mnist_train_dataset
 train_labels = mnist_train_labels 
@@ -107,9 +109,10 @@ test_dataset = mnist_test_dataset
 test_labels = mnist_test_labels 
  
 #number of iterations and learning rate
-num_steps = 10001
-display_step = 1000
+num_steps = 11 #10001
+display_step = 5 #1000
 learning_rate = 0.5
+
  
 graph = tf.Graph()
 with graph.as_default():
@@ -140,7 +143,7 @@ with graph.as_default():
     train_prediction = tf.nn.softmax(logits)
     test_prediction = tf.nn.softmax(model(tf_test_dataset, weights, bias))
  
- 
+
 with tf.Session(graph=graph) as session:
     tf.global_variables_initializer().run()
     print('Initialized')
@@ -153,7 +156,7 @@ with tf.Session(graph=graph) as session:
             print(message)
 
 
-'''
+
 
 
 
