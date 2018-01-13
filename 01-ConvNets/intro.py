@@ -4,6 +4,9 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 import pickle as p
 
+#from modules.data_prep import * 
+
+
 #methods for one-hot encoding the labels, loading the data in a randomized array and a method for
 # flattening an array (since a fully connected network needs an flat array as its input):
 def randomize(dataset, labels):
@@ -94,13 +97,14 @@ print('Training set shape', train_dataset_cifar10.shape, train_labels_cifar10.sh
 print('Test set shape', test_dataset_cifar10.shape, test_labels_cifar10.shape)
 
 
+
 # fit a 1 layer FCNN
 
 image_width = mnist_image_width
 image_height = mnist_image_height
 image_depth = mnist_image_depth
 num_labels = mnist_num_labels 
-batch_size = 11 # I just created this
+batch_size = 10 # I just created this
 
 #the dataset
 train_dataset = mnist_train_dataset
@@ -109,8 +113,8 @@ test_dataset = mnist_test_dataset
 test_labels = mnist_test_labels 
  
 #number of iterations and learning rate
-num_steps = 11 #10001
-display_step = 5 #1000
+num_steps = 1001  #10001
+display_step = 100  #1000
 learning_rate = 0.5
 
  
@@ -130,6 +134,7 @@ with graph.as_default():
     #A one layered fccd simply consists of a matrix multiplication
     def model(data, weights, bias):
         return tf.matmul(flatten_tf_array(data), weights) + bias
+        #return tf.nn.xw_plus_b(train_dataset, weights, bias)  # Terrence exchanged this
  
     logits = model(tf_train_dataset, weights, bias)
     #4) calculate the loss, which will be used in the optimization of the weights
