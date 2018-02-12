@@ -4,8 +4,10 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 import pickle as p
 
-#from modules.data_prep import * 
+#from data_prep import prepare_data as prd
+#import data_prep 
 
+#http://ataspinar.com/2017/08/15/building-convolutional-neural-networks-with-tensorflow/
 
 #methods for one-hot encoding the labels, loading the data in a randomized array and a method for
 # flattening an array (since a fully connected network needs an flat array as its input):
@@ -111,8 +113,19 @@ train_dataset = mnist_train_dataset
 train_labels = mnist_train_labels 
 test_dataset = mnist_test_dataset
 test_labels = mnist_test_labels 
- 
+
+
+'''
+train_dataset = 10
+train_labels = 10
+test_dataset = 10
+test_labels = 10
+
+#mn = prepare_data("mnist")
+mnist = data_prep.prepare_data("mnist",train_dataset,train_labels,test_dataset,test_labels)
+mnist = prepare_data._display(mnist)
 #number of iterations and learning rate
+'''
 num_steps = 1001  #10001
 display_step = 100  #1000
 learning_rate = 0.5

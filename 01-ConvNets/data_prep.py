@@ -4,25 +4,26 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 import pickle as p
 
-
+#from data_prep1 import prepare_data1
 
 class prepare_data:
     #methods for one-hot encoding the labels, loading the data in a randomized array and a method for
     # flattening an array (since a fully connected network needs an flat array as its input):
-    def randomize(dataset, labels):
-        permutation = np.random.permutation(labels.shape[0])
-        shuffled_dataset = dataset[permutation, :, :]
-        shuffled_labels = labels[permutation]
-        return shuffled_dataset, shuffled_labels
+    
+    def randomize(self,dataset, labels):
+        permutation = np.random.permutation(self.labels.shape[0])
+        self.shuffled_dataset = self.dataset[permutation, :, :]
+        self.shuffled_labels = self.labels[permutation]
+        return self.shuffled_dataset, self.shuffled_labels
     
     def one_hot_encode(np_array):
         return (np.arange(10) == np_array[:,None]).astype(np.float32)
     
-    def reformat_data(dataset, labels, image_width, image_height, image_depth):
-        np_dataset_ = np.array([np.array(image_data).reshape(image_width, image_height, image_depth) for image_data in dataset])
-        np_labels_ = one_hot_encode(np.array(labels, dtype=np.float32))
-        np_dataset, np_labels = randomize(np_dataset_, np_labels_)
-        return np_dataset, np_labels
+    def reformat_data(self,dataset, labels, image_width, image_height, image_depth):
+        np_dataset_ = np.array([np.array(image_data).reshape(self.image_width, self.image_height, self.image_depth) for image_data in self.dataset])
+        np_labels_ = one_hot_encode(np.array(self.labels, dtype=np.float32))
+        self.np_dataset, self.np_labels = randomize(np_dataset_, np_labels_)
+        return self.np_dataset, self.np_labels
     
     def flatten_tf_array(array):
         shape = array.get_shape().as_list()
@@ -31,9 +32,12 @@ class prepare_data:
     def accuracy(predictions, labels):
         return (100.0 * np.sum(np.argmax(predictions, 1) == np.argmax(labels, 1)) / predictions.shape[0])
 
-    def __init__(self,train_dataset, train_labels,test_dataset,test_labels ):
+    
+    #def __init__(self,df,train_dataset, train_labels,test_dataset,test_labels ):
+    def __init__(self, df,train_dataset, train_labels,test_dataset,test_labels ):
         #load the MNIST and  CIFAR-10 datasets 
-        if(self == mnist):
+        self.df = df
+        if(self.df == "mnist"):
             import mnist
             from mnist import MNIST
             mndata = MNIST('/home/terrence/CODING/Python/MODELS/CapsNets/python-mnist/data')
@@ -43,11 +47,11 @@ class prepare_data:
             mnist_image_depth = 1
             mnist_num_labels = 10
 
-            mnist_train_dataset_, mnist_train_labels_ = mndata.load_training()
-            mnist_test_dataset_, mnist_test_labels_ = mndata.load_testing()
+            self.train_dataset, self.train_labels = mndata.load_training()
+            self.test_dataset, self.test_labels = mndata.load_testing()
 
-            mnist_train_dataset, mnist_train_labels = reformat_data(mnist_train_dataset_, mnist_train_labels_, mnist_image_width, mnist_image_height, mnist_image_depth)
-            mnist_test_dataset, mnist_test_labels = reformat_data(mnist_test_dataset_, mnist_test_labels_, mnist_image_width, mnist_image_height, mnist_image_depth)
+            mnist_train_dataset, mnist_train_labels = prepare_data.reformat_data(self.train_dataset, self.train_labels, mnist_image_width, mnist_image_height, mnist_image_depth)
+            mnist_test_dataset, mnist_test_labels = prepare_data.reformat_data(self.test_dataset, self.test_labels, mnist_image_width, mnist_image_height, mnist_image_depth)
             '''
             print("There are {} images, each of size {}".format(len(mnist_train_dataset), len(mnist_train_dataset[0])))
             print("Meaning each image has the size of 28*28*1 = {}".format(mnist_image_width*mnist_image_height*1))
@@ -65,7 +69,7 @@ class prepare_data:
             self.test_labels = mnist_test_labels
             ######################################################################################
         #print("+++ cifar10 ++++++++++")
-        elif(self == cifar10):
+        elif(self.df == cifar10):
             cifar10_folder = '/home/terrence/CODING/Python/MODELS/CapsNets/data/cifar10/'
             train_datasets = ['data_batch_1', 'data_batch_2', 'data_batch_3', 'data_batch_4', 'data_batch_5', ]
             test_dataset = ['test_batch']
@@ -105,5 +109,7 @@ class prepare_data:
             self.train_labels = train_labels_cifar10
             self.test_dataset = test_dataset_cifar10
             self.test_labels = test_labels_cifar10
-    return self.train_dataset, self.train_labels,  self.test_dataset, self.test_labels         
+
+    def _display(self):
+        return self.train_dataset, self.train_labels,  self.test_dataset, self.test_labels         
 
