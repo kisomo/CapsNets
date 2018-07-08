@@ -497,10 +497,6 @@ with tf.Session(graph=graph) as session:
 from tflearn.layers.conv import conv_2d, max_pool_2d, avg_pool_2d
 from tflearn.layers.core import fully_connected, dropout, flatten
 
-
-#w = tf.Variable(tf.truncated_normal([84, 10], stddev=0.1))
-#b = tf.Variable(tf.constant(1.0, shape = [10]))
-
 def model_lenet5(data):
     layer1_conv = conv_2d(data, nb_filter = 6, filter_size = 5, strides = [1,1,1,1], activation='relu', padding='SAME', bias = True)
     layer1_pool = avg_pool_2d(layer1_conv, kernel_size = 2, strides=2, padding='SAME')
@@ -513,10 +509,11 @@ def model_lenet5(data):
 
     layer4_fccd = fully_connected(layer3_fccd, n_units = 84, activation='relu', bias = True)
 
-    w = tf.Variable(tf.truncated_normal([84, 10], stddev=0.1))
-    b = tf.Variable(tf.constant(1.0, shape = [10]))
+    #w = tf.Variable(tf.truncated_normal([84, 10], stddev=0.1))
+    #b = tf.Variable(tf.constant(1.0, shape = [10]))
 
-    logits = tf.matmul(layer4_fccd, w) + b
+    #logits = tf.matmul(layer4_fccd, w) + b
+    logits = fully_connected(layer3_fccd, n_units = 10, activation='relu', bias = True)
     return logits
 
 
@@ -585,6 +582,7 @@ with tf.Session(graph=graph) as session:
 
 
 #+++++++++++++++++++++++++++++++++ AlexNet API on oxflower17 dataset +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+'''
 from tflearn.layers.conv import conv_2d, max_pool_2d, avg_pool_2d
 from tflearn.layers.core import fully_connected, dropout, flatten
 from tflearn.layers.normalization import batch_normalization 
@@ -707,21 +705,5 @@ with tf.Session(graph=graph) as session:
             message = "step {:04d} : loss is {:06.2f}, accuracy on training set {:02.2f} %, accuracy on test set {:02.2f} %".format(step, l, train_accuracy, test_accuracy)
             print(message)
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+'''
 

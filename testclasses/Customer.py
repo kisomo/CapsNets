@@ -1,5 +1,7 @@
 import numpy as np
+import pandas as pd
 
+'''
 class Customer1(object):
     """A customer of ABC Bank with a checking account. Customers have the
     following properties:
@@ -29,4 +31,22 @@ class Customer1(object):
         dollars."""
         self.balance += amount
         return self.balance
+
+'''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
